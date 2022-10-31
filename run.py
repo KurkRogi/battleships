@@ -38,6 +38,7 @@ class Board:
         self.board = []
         self.ships_left = 0
 
+        # Create empty game board
         for y in range(height):
             row = []
             for x in range(width):
@@ -46,7 +47,7 @@ class Board:
 
     def get_board_line(self):
         """
-        Generator funtion returning a string representation of one line
+        Generator funtion returning a string representation of a single line
         of the board
         """
         for i in range(-1, self.height + 1):
@@ -71,7 +72,7 @@ class Board:
 
     def __str__(self):
         """
-        Returns string representation of the board
+        Returns visual string representation of the board
         for debuging purposes only, really.
         """
         return "\n".join(x for x in self.get_board_line())
@@ -103,9 +104,18 @@ class Board:
                 number -= 1
         return self.ships_left
 
-clear_screen()
-
-player_board = Board(10,10)
-player_board.fill(10)
-print(player_board)
-
+def get_integer(min = 1, max = 10, message = "Please enter a number: "):
+    """
+    Prompt player to enter an integer within a range
+    """
+    while True:
+        try:
+            integer = int(input(message + "\n"))
+            if integer < min or integer > max:
+                raise ValueError(f"{integer} is out of range [{min}-{max}]")
+            break
+        except ValueError as error:
+            print("***", end = " ")
+            print(error, end = "\n\n")
+    
+    return integer
