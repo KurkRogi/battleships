@@ -104,7 +104,7 @@ class Board:
                 number -= 1
         return self.ships_left
 
-def get_integer(min = 1, max = 10, message = "Please enter a number: "):
+def get_integer(min = 1, max = 10, message = "Please enter a number [1-10]: "):
     """
     Prompt player to enter an integer within a range
     """
@@ -119,3 +119,26 @@ def get_integer(min = 1, max = 10, message = "Please enter a number: "):
             print(error, end = "\n\n")
     
     return integer
+
+
+def main():
+    
+    while True:
+        clear_screen()
+        print("Welcome to the Battleships game")
+        print("-" * 31 + "\n")
+        
+        board_size = get_integer(2, 10, "Please enter the board size [2-10]")
+        player_board = Board(board_size, board_size)
+        opponent_board = Board(board_size, board_size)
+        
+        number_of_ships = get_integer(1, board_size ** 2, f"How many ships do you want? [1-{board_size ** 2}]")
+        player_board.fill(number_of_ships)
+        opponent_board.fill(number_of_ships)
+
+        print(player_board)
+
+        check = get_integer()
+        print(check)
+        break
+main()
