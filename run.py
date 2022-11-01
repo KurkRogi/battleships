@@ -131,17 +131,30 @@ def main():
         print("Welcome to the Battleships game")
         print("-" * 31 + "\n")
         
-        board_size = get_integer(2, 10, "Please enter the board size [2-10]")
+        print("*** Game setup")
+        
+        # Find out what's the size of board player wants
+        board_size = get_integer(2, 10, "\nPlease enter the board size [2-10]")
         player_board = Board(board_size, board_size)
         opponent_board = Board(board_size, board_size)
         
-        number_of_ships = get_integer(1, board_size ** 2, f"How many ships do you want? [1-{board_size ** 2}]")
+        # Find how many ships on the board the player wants
+        number_of_ships = get_integer(1, board_size ** 2, f"\nHow many ships do you want? [1-{board_size ** 2}]")
         player_board.fill(number_of_ships)
         opponent_board.fill(number_of_ships)
 
-        print(player_board)
+        clear_screen()
+        print("Insructions:")
+        print(f"{chr(Board.EMPTY_CELL)} is an empty cell")
+        print(f"{chr(Board.SHIP)} is an ship")
+        print(f"{chr(Board.HIT_CELL)} was already targeted")
+        print(f"{chr(Board.SUNKEN_SHIP)} is a sunken ship\n")
+        print("Your board is on left, the opponent's on right")
+        print(f"There are still {player_board.ships_left} ships on your "
+            + f"board and {opponent_board.ships_left} on oponent's")
+        print("Please enter your target's coorinates separated by coma, horizontal first")
 
-        check = get_integer()
-        print(check)
+        print(opponent_board)
         break
+
 main()
