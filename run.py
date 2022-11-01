@@ -21,7 +21,7 @@ class Board:
     SUNKEN_SHIP = 0x002a
     SHIP = 0x25a0
     
-    # Unicodes for border: T = top, L = left, R = right, M = middle, B = bottom
+    # Unicodes for border. Key: T = top, L = left, R = right, M = middle, B = bottom
     BORDER_TL = 0x2554 
     BORDER_TM = 0x2550
     BORDER_TR = 0x2557
@@ -45,7 +45,7 @@ class Board:
                 row.append(Board.EMPTY_CELL)
             self.board.append(row)
 
-    def get_board_line(self):
+    def get_board_line(self, hide_ships = False):
         """
         Generator funtion returning a string representation of a single line
         of the board
@@ -65,17 +65,20 @@ class Board:
                     )
             else:
                 # actual line on the board starting and ending with borders and spaced with white space
+                # + " ".join(chr(x) for x in self.board[i])
+                # Indexing tuple with True/False is apparently not very Pythonic but still better
+                # than next ternary operator
                 yield (chr(Board. BORDER_LM) + " "
-                    + " ".join(chr(x) for x in self.board[i])
+                    + " ".join(chr(x) if x != Board.SHIP else chr((Board.SHIP, Board.EMPTY_CELL)[hide_ships]) for x in self.board[i])
                     + " " + chr(Board.BORDER_RM)
                     )
 
-    def __str__(self):
+    def __str__(self, hide_ships = False):
         """
         Returns visual string representation of the board
         for debuging purposes only, really.
         """
-        return "\n".join(x for x in self.get_board_line())
+        return "\n".join(x for x in self.get_board_line(hide_ships))
         
 
     def is_cell_free(self, x, y):
