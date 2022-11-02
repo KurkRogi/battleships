@@ -149,10 +149,13 @@ def main():
         print(f"{chr(Board.SHIP)} is an ship")
         print(f"{chr(Board.HIT_CELL)} was already targeted")
         print(f"{chr(Board.SUNKEN_SHIP)} is a sunken ship\n")
-        print("Your board is on left, the opponent's on right")
-        print(f"There are still {player_board.ships_left} ships on your "
+
+        print("Your board is on left, opponent's on right")
+
+        print(f"There {('are', 'is')[player_board.ships_left == 1]} "
+            + f"still {player_board.ships_left} ship{('s', '')[player_board.ships_left == 1]} on your "
             + f"board and {opponent_board.ships_left} on oponent's")
-        print("Please enter your target's coorinates separated by coma, horizontal first")
+        print("\nPlease enter your target's coorinates separated by comma, horizontal first")
 
         print(opponent_board)
         break
