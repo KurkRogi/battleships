@@ -123,10 +123,38 @@ def get_integer(min = 1, max = 10, message = "Please enter a number [1-10]: "):
                 raise ValueError(f"{integer} is out of range [{min}-{max}]")
             break
         except ValueError as error:
-            print("***", end = " ")
-            print(error, end = "\n\n")
+            print(f"*** {error} \n")
     
     return integer
+
+
+def get_coordinates(opponent_board):
+    """
+    Prompt player to enter shot coordinates
+    and return them as a tuple after verification
+    function is ready for non-square boards in the future
+    """
+    min_x, max_x = 1, opponent_board.width
+    min_y, max_y = 1, opponent_board.height
+    message = f"Please enter your target's coorinates separated by comma, horizontal first [1-{max_x}],[1-{max_y}]"
+    
+    while True:
+        try:
+            data = input(message + "\n").strip().replace(" ", "").split(",")
+            if len(data) != 2:
+                raise ValueError(f"Enter 2 numbers separated by comma")
+            print(data)
+            x = int(data[0])
+            y = int(data[1])
+            if x < min_x or x > max_x:
+                raise ValueError(f"First coordinate must be between {min_x} and {max_x}")
+            if y < min_y or y > max_y:
+                raise ValueError(f"Second coordinate must be between {min_y} and {max_y}")
+            break
+        except ValueError as error:
+            print(f"*** {error} \n")
+        
+    return (x, y)
 
 
 def game_setup():
@@ -136,8 +164,8 @@ def game_setup():
     """
     clear_screen()
     print("Welcome to the Battleships game\n"
-        + "-" * 31 + "\n\n"
-        + "*** Game setup")
+          + "-" * 31 + "\n\n"
+          + "*** Game setup")
         
     # Find out what's the size of board player wants
     board_size = get_integer(2, 10, "\nPlease enter the board size [2-10]")
@@ -163,8 +191,8 @@ def game_instructions(p, o):
     print("Your board is on left, opponent's on right")
 
     print(f"There {('are', 'is')[p == 1]} "
-        + f"still {p} ship{('s', '')[p == 1]} on your "
-        + f"board and {o} on oponent's")
+          + f"still {p} ship{('s', '')[p == 1]} on your "
+          + f"board and {o} on oponent's")
 
 
 def game_display_boards(player_board, opponent_board):
@@ -186,10 +214,8 @@ def main():
         opponent_board.fill(number_of_ships)
 
         game_instructions(player_board.ships_left, opponent_board.ships_left)
-
         game_display_boards(player_board, opponent_board)
-
-        print("Please enter your target's coorinates separated by comma, horizontal first")
+        get_coordinates(opponent_board)
 
         break
 
