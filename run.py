@@ -31,6 +31,7 @@ class Board:
     BORDER_LM = 0x2551
     BORDER_RM = 0x2551
 
+
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -44,6 +45,7 @@ class Board:
             for x in range(width):
                 row.append(Board.EMPTY_CELL)
             self.board.append(row)
+
 
     def get_board_line(self, hide_ships = False):
         """
@@ -73,6 +75,7 @@ class Board:
                     + " " + chr(Board.BORDER_RM)
                     )
 
+
     def __str__(self, hide_ships = False):
         """
         Returns visual string representation of the board
@@ -87,7 +90,8 @@ class Board:
         """
 
         return self.board[y][x] == Board.EMPTY_CELL
-    
+
+
     def fill(self, number):
         """
         Fills the board randomly with number ships and sets
@@ -107,6 +111,7 @@ class Board:
                 number -= 1
         return self.ships_left
 
+
 def get_integer(min = 1, max = 10, message = "Please enter a number [1-10]: "):
     """
     Prompt player to enter an integer within a range
@@ -124,38 +129,58 @@ def get_integer(min = 1, max = 10, message = "Please enter a number [1-10]: "):
     return integer
 
 
+def game_setup():
+    """
+    Set up game parameters and returns them as a tuple
+    (board_size, ship_number)
+    """
+    clear_screen()
+    print("Welcome to the Battleships game\n"
+        + "-" * 31 + "\n\n"
+        + "*** Game setup")
+        
+    # Find out what's the size of board player wants
+    board_size = get_integer(2, 10, "\nPlease enter the board size [2-10]")
+    
+    # Find how many ships on the board the player wants
+    number_of_ships = get_integer(1, board_size ** 2, f"\nHow many ships do you want? [1-{board_size ** 2}]")
+
+    return (board_size, number_of_ships)
+
+
+def game_instructions(p, o):
+    """
+    Display game instructions and current score
+    p for player and o for opponent
+    """
+    clear_screen()
+    print("Insructions:\n" + "-" * 12)
+    print(f"{chr(Board.EMPTY_CELL)} is an empty cell")
+    print(f"{chr(Board.SHIP)} is an ship")
+    print(f"{chr(Board.HIT_CELL)} was already targeted")
+    print(f"{chr(Board.SUNKEN_SHIP)} is a sunken ship\n")
+
+    print("Your board is on left, opponent's on right")
+
+    print(f"There {('are', 'is')[p == 1]} "
+        + f"still {p} ship{('s', '')[p == 1]} on your "
+        + f"board and {o} on oponent's")
+
+
 def main():
     
     while True:
-        clear_screen()
-        print("Welcome to the Battleships game")
-        print("-" * 31 + "\n")
-        
-        print("*** Game setup")
-        
-        # Find out what's the size of board player wants
-        board_size = get_integer(2, 10, "\nPlease enter the board size [2-10]")
+        board_size, number_of_ships = game_setup()
+
         player_board = Board(board_size, board_size)
         opponent_board = Board(board_size, board_size)
-        
-        # Find how many ships on the board the player wants
-        number_of_ships = get_integer(1, board_size ** 2, f"\nHow many ships do you want? [1-{board_size ** 2}]")
         player_board.fill(number_of_ships)
         opponent_board.fill(number_of_ships)
 
-        clear_screen()
-        print("Insructions:")
-        print(f"{chr(Board.EMPTY_CELL)} is an empty cell")
-        print(f"{chr(Board.SHIP)} is an ship")
-        print(f"{chr(Board.HIT_CELL)} was already targeted")
-        print(f"{chr(Board.SUNKEN_SHIP)} is a sunken ship\n")
+        game_instructions(player_board.ships_left, opponent_board.ships_left)
 
-        print("Your board is on left, opponent's on right")
-
-        print(f"There {('are', 'is')[player_board.ships_left == 1]} "
-            + f"still {player_board.ships_left} ship{('s', '')[player_board.ships_left == 1]} on your "
-            + f"board and {opponent_board.ships_left} on oponent's")
         print("\nPlease enter your target's coorinates separated by comma, horizontal first")
+
 
         print(opponent_board)
         break
