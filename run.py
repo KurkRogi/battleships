@@ -167,6 +167,14 @@ def game_instructions(p, o):
         + f"board and {o} on oponent's")
 
 
+def game_display_boards(player_board, opponent_board):
+    """
+    Display both player and opponent board next to each other
+    """
+    for p, o in zip(player_board.get_board_line(), opponent_board.get_board_line(True)):
+        print(p + " " * 5 + o)
+
+
 def main():
     
     while True:
@@ -179,10 +187,10 @@ def main():
 
         game_instructions(player_board.ships_left, opponent_board.ships_left)
 
-        print("\nPlease enter your target's coorinates separated by comma, horizontal first")
+        game_display_boards(player_board, opponent_board)
 
+        print("Please enter your target's coorinates separated by comma, horizontal first")
 
-        print(opponent_board)
         break
 
 main()
