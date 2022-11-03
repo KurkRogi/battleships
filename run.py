@@ -22,7 +22,8 @@ class Board:
     SUNKEN_SHIP = 0x002a
     SHIP = 0x25a0
     
-    # Unicodes for border. Key: T = top, L = left, R = right, M = middle, B = bottom
+    # Unicodes for border. Key: T = top, L = left, R = right,
+    #                           M = middle, B = bottom
     BORDER_TL = 0x2554 
     BORDER_TM = 0x2550
     BORDER_TR = 0x2557
@@ -65,9 +66,10 @@ class Board:
                        + chr(Board.BORDER_BR)
                        )
             else:
-                # actual line on the board starting and ending with borders and spaced with white space
-                # + " ".join(chr(x) for x in self.board[i])
-                # Indexing tuple with True/False is apparently not very Pythonic but still better
+                # actual line on the board starting and ending with borders
+                # and spaced with white space + " ".join(chr(x) for x in self.board[i])
+                # Indexing tuple with True/False is apparently not very
+                # Pythonic but still better
                 # than next ternary operator
                 yield (chr(Board. BORDER_LM) + " "
                        + " ".join(chr(x) if x != Board.SHIP else chr((Board.SHIP, Board.EMPTY_CELL)[hide_ships]) for x in self.board[i])
@@ -149,7 +151,7 @@ def get_coordinates(opponent_board):
         except ValueError as error:
             print(f"*** {error} \n")
         
-    return (x, y)
+    return x, y
 
 
 def game_setup():
@@ -198,6 +200,34 @@ def game_display_boards(player_board, opponent_board):
         print(p + " " * 5 + o)
 
 
+def game_shot(brd, coords):
+    """
+    Place shot in coords on board brd and returns
+    True if succesfull or False if cell already targeted
+    and message to player
+    """
+    x, y = coords
+    x -= 1
+    y -= 1
+    result = False
+    message = ""
+    cell = brd.board[y][x]
+ 
+    if cell == Board.EMPTY_CELL:
+        result = True
+        brd.board[y][x] = Board.HIT_CELL
+        message = "You missed."
+    elif cell == Board.HIT_CELL:
+        message = "This coordinates were already tageted."
+    elif cell == Board.SUNKEN_SHIP:
+        message = "You've already sunken this ship."
+    else:
+        result = True
+        brd.board[y][x] = Board.SUNKEN_SHIP
+        message = "You hit opponent's ship!"
+
+    return result, message
+
 def main():
     
     while True:
@@ -210,7 +240,18 @@ def main():
 
         game_instructions(player_board.ships_left, opponent_board.ships_left)
         game_display_boards(player_board, opponent_board)
-        get_coordinates(opponent_board)
+        
+        result = False
+
+        # for testing only
+        opponent_board.board[1][1] = Board.SUNKEN_SHIP
+        opponent_board.board[1][2] = Board.SHIP
+        opponent_board.board[1][3] = Board.HIT_CELL
+
+        while True:
+            result, message = game_shot(opponent_board, get_coordinates(opponent_board))
+            print(message)
+            game_display_boards(player_board, opponent_board)
 
         break
 
