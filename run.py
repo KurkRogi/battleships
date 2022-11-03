@@ -1,13 +1,14 @@
 # Battleships terminal text game
 import os
-import math
 from random import randint
+
 
 def clear_screen():
     """
     Clears screen. Solution from # https://stackoverflow.com/a/2084628
     """
     os.system('cls' if os.name == 'nt' else 'clear')
+
 
 class Board:
     """
@@ -31,7 +32,6 @@ class Board:
     BORDER_LM = 0x2551
     BORDER_RM = 0x2551
 
-
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -46,8 +46,7 @@ class Board:
                 row.append(Board.EMPTY_CELL)
             self.board.append(row)
 
-
-    def get_board_line(self, hide_ships = False):
+    def get_board_line(self, hide_ships=False):
         """
         Generator funtion returning a string representation of a single line
         of the board
@@ -56,41 +55,38 @@ class Board:
             if i == -1:
                 # top border line of the board
                 yield (chr(Board.BORDER_TL) 
-                    + chr(Board.BORDER_TM) * (self.width * 2 + 1)
-                    + chr(Board.BORDER_TR)
-                    )
+                       + chr(Board.BORDER_TM) * (self.width * 2 + 1)
+                       + chr(Board.BORDER_TR)
+                       )
             elif i == self.height:
                 # bottom border line
                 yield (chr(Board.BORDER_BL) 
-                    + chr(Board.BORDER_BM) * (self.width * 2 + 1)
-                    + chr(Board.BORDER_BR)
-                    )
+                       + chr(Board.BORDER_BM) * (self.width * 2 + 1)
+                       + chr(Board.BORDER_BR)
+                       )
             else:
                 # actual line on the board starting and ending with borders and spaced with white space
                 # + " ".join(chr(x) for x in self.board[i])
                 # Indexing tuple with True/False is apparently not very Pythonic but still better
                 # than next ternary operator
                 yield (chr(Board. BORDER_LM) + " "
-                    + " ".join(chr(x) if x != Board.SHIP else chr((Board.SHIP, Board.EMPTY_CELL)[hide_ships]) for x in self.board[i])
-                    + " " + chr(Board.BORDER_RM)
-                    )
+                       + " ".join(chr(x) if x != Board.SHIP else chr((Board.SHIP, Board.EMPTY_CELL)[hide_ships]) for x in self.board[i])
+                       + " " + chr(Board.BORDER_RM)
+                       )
 
-
-    def __str__(self, hide_ships = False):
+    def __str__(self, hide_ships=False):
         """
         Returns visual string representation of the board
         for debuging purposes only, really.
         """
         return "\n".join(x for x in self.get_board_line(hide_ships))
-        
-
+     
     def is_cell_free(self, x, y):
         """
         Checks if a cell on board is free and returns True if so
         """
 
         return self.board[y][x] == Board.EMPTY_CELL
-
 
     def fill(self, number):
         """
@@ -112,7 +108,7 @@ class Board:
         return self.ships_left
 
 
-def get_integer(min = 1, max = 10, message = "Please enter a number [1-10]: "):
+def get_integer(min=1, max=10, message="Please enter a number [1-10]: "):
     """
     Prompt player to enter an integer within a range
     """
@@ -143,7 +139,6 @@ def get_coordinates(opponent_board):
             data = input(message + "\n").strip().replace(" ", "").split(",")
             if len(data) != 2:
                 raise ValueError(f"Enter 2 numbers separated by comma")
-            print(data)
             x = int(data[0])
             y = int(data[1])
             if x < min_x or x > max_x:
@@ -218,5 +213,6 @@ def main():
         get_coordinates(opponent_board)
 
         break
+
 
 main()
