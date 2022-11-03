@@ -216,15 +216,16 @@ def game_shot(brd, coords):
     if cell == Board.EMPTY_CELL:
         result = True
         brd.board[y][x] = Board.HIT_CELL
-        message = "You missed."
+        message = "missed."
     elif cell == Board.HIT_CELL:
-        message = "This coordinates were already tageted."
+        message = "already targeted this coordinates"
     elif cell == Board.SUNKEN_SHIP:
-        message = "You've already sunken this ship."
+        message = "already sunk this ship"
     else:
         result = True
         brd.board[y][x] = Board.SUNKEN_SHIP
-        message = "You hit opponent's ship!"
+        message = "hit a ship!"
+        brd.ships_left -= 1
 
     return result, message
 
@@ -238,22 +239,48 @@ def main():
         player_board.fill(number_of_ships)
         opponent_board.fill(number_of_ships)
 
-        game_instructions(player_board.ships_left, opponent_board.ships_left)
-        game_display_boards(player_board, opponent_board)
-        
-        result = False
-
-        # for testing only
-        opponent_board.board[1][1] = Board.SUNKEN_SHIP
-        opponent_board.board[1][2] = Board.SHIP
-        opponent_board.board[1][3] = Board.HIT_CELL
+        # opponent_board.board[0][0] = Board.HIT_CELL
 
         while True:
-            result, message = game_shot(opponent_board, get_coordinates(opponent_board))
-            print(message)
+            # Ask for coords untill a ship or empty cell is hit
+            result = False
+            message_player = ""
+            while not result:
+                clear_screen()
+                game_instructions(player_board.ships_left,
+                                opponent_board.ships_left)
+                game_display_boards(player_board, opponent_board)
+                if message_player:
+                    print(f"You {message_player}")
+                result, message_player = game_shot(opponent_board,
+                                                get_coordinates(opponent_board))
+
+            # Same procedure for computer opponent but only valid shots
+            # need to display 
+            result = False
+            while not result:
+                result, message = game_shot(player_board,
+                                            (randint(1, board_size),
+                                            randint(1, board_size)))
+            clear_screen()
+            print(f"You {message_player}")
+            print(f"Opponent {message}")
             game_display_boards(player_board, opponent_board)
-
+            
+            if player_board.ships_left == 0 and opponent_board.ships_left == 0:
+                print("It's a draw!")
+                input("PRESS RETURN\n")
+                break
+            if player_board.ships_left == 0:
+                print("You've lost!")
+                input("PRESS RETURN\n")
+                break
+            if opponent_board.ships_left == 0:
+                print("You've won!")
+                input("PRESS RETURN\n")
+                break
+            if player_board.ships_left and opponent_board.ships_left:
+                input("PRESS RETURN\n")
         break
-
 
 main()
