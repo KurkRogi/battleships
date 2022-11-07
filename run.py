@@ -131,8 +131,8 @@ def get_coordinates(opponent_board):
     """
     min_x, max_x = 1, opponent_board.width
     min_y, max_y = 1, opponent_board.height
-    message = f"Please enter your target's coorinates separated by comma, \
-horizontal first [1-{max_x}],[1-{max_y}]"
+    message = f"Please enter your target's coorinates separated by comma,\
+\nhorizontal first [1-{max_x}],[1-{max_y}]"
 
     while True:
         try:
