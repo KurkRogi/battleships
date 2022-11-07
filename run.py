@@ -1,6 +1,7 @@
 """Battleships terminal text game"""
 
 import os
+import sys
 from random import randint
 
 
@@ -235,6 +236,7 @@ def main():
     """ main function runing game loop"""
 
     while True:
+        # game loop including game setup
         board_size, number_of_ships = game_setup()
 
         player_board = Board(board_size, board_size)
@@ -243,6 +245,8 @@ def main():
         opponent_board.fill(number_of_ships)
 
         while True:
+            # game duel loop
+
             # Ask for coords untill a ship or empty cell is hit
             result = False
             message_player = ""
@@ -268,20 +272,28 @@ def main():
             print(f"Opponent {message}")
             game_display_boards(player_board, opponent_board)
 
+            end_game = False
+
+            # check if it's time to end the game
+            if player_board.ships_left == 0 or opponent_board.ships_left == 0:
+                end_game = True
+
+            # Decide what message to diplay
             if player_board.ships_left == 0 and opponent_board.ships_left == 0:
                 print("It's a draw!")
-                input("PRESS RETURN / ENTER\n")
-                break
-            if player_board.ships_left == 0:
+            elif player_board.ships_left == 0:
                 print("You've lost!")
-                input("PRESS RETURN / ENTER\n")
-                break
-            if opponent_board.ships_left == 0:
+            elif opponent_board.ships_left == 0:
                 print("You've won!")
-                input("PRESS RETURN / ENTER\n")
+
+            # Check if player wants to continue
+            if input("Press ENTER / RETURN o type 'quit' to exit gamme\n") == "quit":
+                print("Sorry to see you leave, bye!")
+                sys.exit()
+
+            # Breake out to main game loop if all ships gone
+            if end_game:
                 break
-            if player_board.ships_left and opponent_board.ships_left:
-                input("PRESS RETURN / ENTER\n")
-        break
+
 
 main()
