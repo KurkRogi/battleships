@@ -1,5 +1,4 @@
 # Battleships
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
 
 Battleships is a termina based application allowing the user to play Battleships game against one computer opponent,
 
